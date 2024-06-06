@@ -1,7 +1,8 @@
-# souce code & guidance & models
+# souce code & guidance & models & images of the whole code and models
 1.souce code :https://github.com/AUTOMATIC1111/stable-diffusion-webui
 2.guidance :https://phazertech.com/tutorials/rocm.html
 3.models:https://huggingface.co/stabilityai/stable-diffusion-2-1/tree/main
+4.https://cloud.189.cn/t/ZjAZ7n7RNbia （访问码：4uks）
 
 # attention according to the guidance 
 1.Do not use root as user 
