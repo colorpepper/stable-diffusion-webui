@@ -1,0 +1,715 @@
+ai@ubt2204s-uefi-amd-diag:~$ cd /mnt/git/stable-diffusion-webui/
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ python
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import torch
+
+>>> torch.cuda.is_available()
+False
+>>> 
+[1]+  Stopped                 python
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ sudo pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+[sudo] password for ai: 
+Looking in indexes: https://download.pytorch.org/whl/rocm6.0
+Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (2.3.0)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (0.19.0.dev20240415+rocm6.0)
+Requirement already satisfied: torchaudio in /usr/local/lib/python3.10/dist-packages (2.2.0.dev20240415+rocm6.0)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch) (3.13.1)
+Requirement already satisfied: typing-extensions>=4.8.0 in /usr/local/lib/python3.10/dist-packages (from torch) (4.12.1)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch) (1.12)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch) (3.2.1)
+Requirement already satisfied: jinja2 in /usr/lib/python3/dist-packages (from torch) (3.0.3)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch) (2024.2.0)
+Requirement already satisfied: nvidia-cuda-nvrtc-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-runtime-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cuda-cupti-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.105)
+Requirement already satisfied: nvidia-cudnn-cu12==8.9.2.26 in /usr/local/lib/python3.10/dist-packages (from torch) (8.9.2.26)
+Requirement already satisfied: nvidia-cublas-cu12==12.1.3.1 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.3.1)
+Requirement already satisfied: nvidia-cufft-cu12==11.0.2.54 in /usr/local/lib/python3.10/dist-packages (from torch) (11.0.2.54)
+Requirement already satisfied: nvidia-curand-cu12==10.3.2.106 in /usr/local/lib/python3.10/dist-packages (from torch) (10.3.2.106)
+Requirement already satisfied: nvidia-cusolver-cu12==11.4.5.107 in /usr/local/lib/python3.10/dist-packages (from torch) (11.4.5.107)
+Requirement already satisfied: nvidia-cusparse-cu12==12.1.0.106 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.0.106)
+Requirement already satisfied: nvidia-nccl-cu12==2.20.5 in /usr/local/lib/python3.10/dist-packages (from torch) (2.20.5)
+Requirement already satisfied: nvidia-nvtx-cu12==12.1.105 in /usr/local/lib/python3.10/dist-packages (from torch) (12.1.105)
+Requirement already satisfied: triton==2.3.0 in /usr/local/lib/python3.10/dist-packages (from torch) (2.3.0)
+Requirement already satisfied: nvidia-nvjitlink-cu12 in /usr/local/lib/python3.10/dist-packages (from nvidia-cusolver-cu12==11.4.5.107->torch) (12.5.40)
+Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from torchvision) (1.26.4)
+INFO: pip is looking at multiple versions of torchvision to determine which version is compatible with other requirements. This could take a while.
+Collecting torchvision
+  Downloading https://download.pytorch.org/whl/rocm6.0/torchvision-0.18.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (65.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.7/65.7 MB 3.3 MB/s eta 0:00:00
+Collecting torch
+  Downloading https://download.pytorch.org/whl/rocm6.0/torch-2.3.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (2193.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 GB 1.1 MB/s eta 0:00:00
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /usr/lib/python3/dist-packages (from torchvision) (9.0.1)
+Collecting pytorch-triton-rocm==2.3.1 (from torch)
+  Downloading https://download.pytorch.org/whl/pytorch_triton_rocm-2.3.1-cp310-cp310-linux_x86_64.whl (234.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 234.3/234.3 MB 3.2 MB/s eta 0:00:00
+INFO: pip is looking at multiple versions of torchaudio to determine which version is compatible with other requirements. This could take a while.
+Collecting torchaudio
+  Downloading https://download.pytorch.org/whl/rocm6.0/torchaudio-2.3.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (1.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 3.4 MB/s eta 0:00:00
+Requirement already satisfied: mpmath>=0.19 in /usr/local/lib/python3.10/dist-packages (from sympy->torch) (1.2.1)
+DEPRECATION: distro-info 1.1build1 has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of distro-info or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+DEPRECATION: gpg 1.16.0-unknown has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of gpg or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+DEPRECATION: python-debian 0.1.43ubuntu1 has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of python-debian or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+Installing collected packages: pytorch-triton-rocm, torch, torchvision, torchaudio
+  Attempting uninstall: pytorch-triton-rocm
+    Found existing installation: pytorch-triton-rocm 3.0.0+0a22a91d04
+    Uninstalling pytorch-triton-rocm-3.0.0+0a22a91d04:
+      Successfully uninstalled pytorch-triton-rocm-3.0.0+0a22a91d04
+  Attempting uninstall: torch
+    Found existing installation: torch 2.3.0
+    Uninstalling torch-2.3.0:
+      Successfully uninstalled torch-2.3.0
+  Attempting uninstall: torchvision
+    Found existing installation: torchvision 0.19.0.dev20240415+rocm6.0
+    Uninstalling torchvision-0.19.0.dev20240415+rocm6.0:
+      Successfully uninstalled torchvision-0.19.0.dev20240415+rocm6.0
+  Attempting uninstall: torchaudio
+    Found existing installation: torchaudio 2.2.0.dev20240415+rocm6.0
+    Uninstalling torchaudio-2.2.0.dev20240415+rocm6.0:
+      Successfully uninstalled torchaudio-2.2.0.dev20240415+rocm6.0
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+xformers 0.0.26.post1 requires torch==2.3.0, but you have torch 2.3.1+rocm6.0 which is incompatible.
+Successfully installed pytorch-triton-rocm-2.3.1 torch-2.3.1+rocm6.0 torchaudio-2.3.1+rocm6.0 torchvision-0.18.1+rocm6.0
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ sudo pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+[sudo] password for ai: 
+Looking in indexes: https://download.pytorch.org/whl/rocm6.0
+Requirement already satisfied: torch in /usr/local/lib/python3.10/dist-packages (2.3.1+rocm6.0)
+Requirement already satisfied: torchvision in /usr/local/lib/python3.10/dist-packages (0.18.1+rocm6.0)
+Requirement already satisfied: torchaudio in /usr/local/lib/python3.10/dist-packages (2.3.1+rocm6.0)
+Requirement already satisfied: filelock in /usr/local/lib/python3.10/dist-packages (from torch) (3.13.1)
+Requirement already satisfied: typing-extensions>=4.8.0 in /usr/local/lib/python3.10/dist-packages (from torch) (4.12.1)
+Requirement already satisfied: sympy in /usr/local/lib/python3.10/dist-packages (from torch) (1.12)
+Requirement already satisfied: networkx in /usr/local/lib/python3.10/dist-packages (from torch) (3.2.1)
+Requirement already satisfied: jinja2 in /usr/lib/python3/dist-packages (from torch) (3.0.3)
+Requirement already satisfied: fsspec in /usr/local/lib/python3.10/dist-packages (from torch) (2024.2.0)
+Requirement already satisfied: pytorch-triton-rocm==2.3.1 in /usr/local/lib/python3.10/dist-packages (from torch) (2.3.1)
+Requirement already satisfied: numpy in /usr/local/lib/python3.10/dist-packages (from torchvision) (1.26.4)
+Requirement already satisfied: pillow!=8.3.*,>=5.3.0 in /usr/lib/python3/dist-packages (from torchvision) (9.0.1)
+Requirement already satisfied: mpmath>=0.19 in /usr/local/lib/python3.10/dist-packages (from sympy->torch) (1.2.1)
+DEPRECATION: distro-info 1.1build1 has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of distro-info or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+DEPRECATION: gpg 1.16.0-unknown has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of gpg or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+DEPRECATION: python-debian 0.1.43ubuntu1 has a non-standard version number. pip 24.1 will enforce this behaviour change. A possible replacement is to upgrade to a newer version of python-debian or contact the author to suggest that they release a version with a conforming version number. Discussion can be found at https://github.com/pypa/pip/issues/12063
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ python
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import torch
+>>> torch.cuda.is_available()
+True
+>>> 
+[2]+  Stopped                 python
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ sudo apt install --no-install-recommends google-perftools
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+google-perftools is already the newest version (2.9.1-0ubuntu3).
+The following packages were automatically installed and are no longer required:
+  libcdio-cdda2 libcdio-paranoia2 libcdio19 libgnome-bg-4-1 libipa-hbac0 libmtp-common libmtp-runtime libmtp9 libnfs13 libntfs-3g89
+Use 'sudo apt autoremove' to remove them.
+0 upgraded, 0 newly installed, 0 to remove and 186 not upgraded.
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.
+bash: ./webui.: No such file or directory
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Installing torch and torchvision
+Looking in indexes: https://download.pytorch.org/whl/rocm5.7
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f07941f8100>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm5.7/torch/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f07941f82b0>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm5.7/torch/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f07941f8340>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm5.7/torch/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f07941f8460>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm5.7/torch/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f07941f8580>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm5.7/torch/
+ERROR: Could not find a version that satisfies the requirement torch (from versions: none)
+ERROR: No matching distribution found for torch
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 48, in <module>
+    main()
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 39, in main
+    prepare_environment()
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 380, in prepare_environment
+    run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 115, in run
+    raise RuntimeError("\n".join(error_bits))
+RuntimeError: Couldn't install torch.
+Command: "/mnt/git/stable-diffusion-webui/venv/bin/python3" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.7
+Error code: 1
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ^C
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ vi webui.sh 
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Installing torch and torchvision
+Looking in indexes: https://download.pytorch.org/whl/rocm6.0
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fc428d3c430>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fc428d3c880>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fc428d3c970>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fc428d3cac0>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7fc428d3cbe0>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+ERROR: Could not find a version that satisfies the requirement torch (from versions: none)
+ERROR: No matching distribution found for torch
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 48, in <module>
+    main()
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 39, in main
+    prepare_environment()
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 380, in prepare_environment
+    run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 115, in run
+    raise RuntimeError("\n".join(error_bits))
+RuntimeError: Couldn't install torch.
+Command: "/mnt/git/stable-diffusion-webui/venv/bin/python3" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+Error code: 1
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ python
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import torch
+>>> torch.cuda.is_available()
+True
+>>> 
+[3]+  Stopped                 python
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ python3 -c 'import torch' 2> /dev/null && echo 'Success' || echo 'Failure'
+Success
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ python3 -c 'import torch' 2 && echo 'Success' || echo 'Failure'
+Success
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Installing torch and torchvision
+Looking in indexes: https://download.pytorch.org/whl/rocm6.0
+WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f7dd89103d0>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=3, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f7dd8910820>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f7dd8910910>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f7dd8910a60>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+WARNING: Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', NewConnectionError('<pip._vendor.urllib3.connection.HTTPSConnection object at 0x7f7dd8910b80>: Failed to establish a new connection: [Errno 111] Connection refused'))': /whl/rocm6.0/torch/
+ERROR: Could not find a version that satisfies the requirement torch (from versions: none)
+ERROR: No matching distribution found for torch
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 48, in <module>
+    main()
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 39, in main
+    prepare_environment()
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 380, in prepare_environment
+    run(f'"{python}" -m {torch_command}', "Installing torch and torchvision", "Couldn't install torch", live=True)
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 115, in run
+    raise RuntimeError("\n".join(error_bits))
+RuntimeError: Couldn't install torch.
+Command: "/mnt/git/stable-diffusion-webui/venv/bin/python3" -m pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm6.0
+Error code: 1
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Installing torch and torchvision
+Looking in indexes: https://download.pytorch.org/whl/rocm6.0
+Collecting torch
+  Downloading https://download.pytorch.org/whl/rocm6.0/torch-2.3.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (2193.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.2/2.2 GB 1.2 MB/s eta 0:00:00
+Collecting torchvision
+  Downloading https://download.pytorch.org/whl/rocm6.0/torchvision-0.18.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (65.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.7/65.7 MB 7.8 MB/s eta 0:00:00
+Collecting torchaudio
+  Downloading https://download.pytorch.org/whl/rocm6.0/torchaudio-2.3.1%2Brocm6.0-cp310-cp310-linux_x86_64.whl (1.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 11.1 MB/s eta 0:00:00
+Collecting networkx
+  Downloading https://download.pytorch.org/whl/networkx-3.2.1-py3-none-any.whl (1.6 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 11.7 MB/s eta 0:00:00
+Collecting jinja2
+  Downloading https://download.pytorch.org/whl/Jinja2-3.1.3-py3-none-any.whl (133 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 133.2/133.2 KB 8.7 MB/s eta 0:00:00
+Collecting sympy
+  Downloading https://download.pytorch.org/whl/sympy-1.12-py3-none-any.whl (5.7 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.7/5.7 MB 12.6 MB/s eta 0:00:00
+Collecting pytorch-triton-rocm==2.3.1
+  Downloading https://download.pytorch.org/whl/pytorch_triton_rocm-2.3.1-cp310-cp310-linux_x86_64.whl (234.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 234.3/234.3 MB 4.8 MB/s eta 0:00:00
+Collecting fsspec
+  Downloading https://download.pytorch.org/whl/fsspec-2024.2.0-py3-none-any.whl (170 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 170.9/170.9 KB 7.8 MB/s eta 0:00:00
+Collecting filelock
+  Downloading https://download.pytorch.org/whl/filelock-3.13.1-py3-none-any.whl (11 kB)
+Collecting typing-extensions>=4.8.0
+  Downloading https://download.pytorch.org/whl/typing_extensions-4.9.0-py3-none-any.whl (32 kB)
+Collecting numpy
+  Downloading https://download.pytorch.org/whl/numpy-1.26.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (18.2 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 18.2/18.2 MB 11.3 MB/s eta 0:00:00
+Collecting pillow!=8.3.*,>=5.3.0
+  Downloading https://download.pytorch.org/whl/pillow-10.2.0-cp310-cp310-manylinux_2_28_x86_64.whl (4.5 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 12.7 MB/s eta 0:00:00
+Collecting MarkupSafe>=2.0
+  Downloading https://download.pytorch.org/whl/MarkupSafe-2.1.5-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (25 kB)
+Collecting mpmath>=0.19
+  Downloading https://download.pytorch.org/whl/mpmath-1.3.0-py3-none-any.whl (536 kB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 536.2/536.2 KB 11.2 MB/s eta 0:00:00
+Installing collected packages: mpmath, typing-extensions, sympy, pillow, numpy, networkx, MarkupSafe, fsspec, filelock, pytorch-triton-rocm, jinja2, torch, torchvision, torchaudio
+Successfully installed MarkupSafe-2.1.5 filelock-3.13.1 fsspec-2024.2.0 jinja2-3.1.3 mpmath-1.3.0 networkx-3.2.1 numpy-1.26.3 pillow-10.2.0 pytorch-triton-rocm-2.3.1 sympy-1.12 torch-2.3.1+rocm6.0 torchaudio-2.3.1+rocm6.0 torchvision-0.18.1+rocm6.0 typing-extensions-4.9.0
+Installing clip
+Installing open_clip
+Installing requirements
+Launching Web UI with arguments: 
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 48, in <module>
+    main()
+  File "/mnt/git/stable-diffusion-webui/launch.py", line 44, in main
+    start()
+  File "/mnt/git/stable-diffusion-webui/modules/launch_utils.py", line 465, in start
+    import webui
+  File "/mnt/git/stable-diffusion-webui/webui.py", line 13, in <module>
+    initialize.imports()
+  File "/mnt/git/stable-diffusion-webui/modules/initialize.py", line 23, in imports
+    import gradio  # noqa: F401
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/gradio/__init__.py", line 3, in <module>
+    import gradio.components as components
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/gradio/components/__init__.py", line 1, in <module>
+    from gradio.components.annotated_image import AnnotatedImage
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/gradio/components/annotated_image.py", line 12, in <module>
+    from gradio import utils
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/gradio/utils.py", line 353, in <module>
+    class AsyncRequest:
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/gradio/utils.py", line 372, in AsyncRequest
+    client = httpx.AsyncClient()
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/httpx/_client.py", line 1395, in __init__
+    proxy_map = self._get_proxy_map(proxies, allow_env_proxies)
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/httpx/_client.py", line 216, in _get_proxy_map
+    return {
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/httpx/_client.py", line 217, in <dictcomp>
+    key: None if url is None else Proxy(url=url)
+  File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/httpx/_config.py", line 336, in __init__
+    raise ValueError(f"Unknown scheme for proxy URL {url!r}")
+ValueError: Unknown scheme for proxy URL URL('socks://127.0.0.1:1089/')
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ unset all_proxy && unset ALL_PROXY
+
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Launching Web UI with arguments: 
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+No module 'xformers'. Proceeding without it.
+Loading weights [ad2a33c361] from /mnt/git/stable-diffusion-webui/models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 11.6s (prepare environment: 1.4s, import torch: 2.5s, import gradio: 0.8s, setup paths: 0.7s, other imports: 0.3s, load scripts: 0.4s, create ui: 0.3s, gradio launch: 5.1s).
+changing setting sd_model_checkpoint to v2-1_768-ema-pruned.safetensors: AttributeError
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/modules/options.py", line 165, in set
+    option.onchange()
+  File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 13, in f
+    res = func(*args, **kwargs)
+  File "/mnt/git/stable-diffusion-webui/modules/initialize_util.py", line 181, in <lambda>
+    shared.opts.onchange("sd_model_checkpoint", wrap_queued_call(lambda: sd_models.reload_model_weights()), call=False)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 860, in reload_model_weights
+    sd_model = reuse_model_from_already_loaded(sd_model, checkpoint_info, timer)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 793, in reuse_model_from_already_loaded
+    send_model_to_cpu(sd_model)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 662, in send_model_to_cpu
+    if m.lowvram:
+AttributeError: 'NoneType' object has no attribute 'lowvram'
+
+changing setting sd_model_checkpoint to v2-1_768-nonema-pruned.ckpt: AttributeError
+Traceback (most recent call last):
+  File "/mnt/git/stable-diffusion-webui/modules/options.py", line 165, in set
+    option.onchange()
+  File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 13, in f
+    res = func(*args, **kwargs)
+  File "/mnt/git/stable-diffusion-webui/modules/initialize_util.py", line 181, in <lambda>
+    shared.opts.onchange("sd_model_checkpoint", wrap_queued_call(lambda: sd_models.reload_model_weights()), call=False)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 860, in reload_model_weights
+    sd_model = reuse_model_from_already_loaded(sd_model, checkpoint_info, timer)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 793, in reuse_model_from_already_loaded
+    send_model_to_cpu(sd_model)
+  File "/mnt/git/stable-diffusion-webui/modules/sd_models.py", line 662, in send_model_to_cpu
+    if m.lowvram:
+AttributeError: 'NoneType' object has no attribute 'lowvram'
+
+Creating model from config: /mnt/git/stable-diffusion-webui/repositories/stable-diffusion-stability-ai/configs/stable-diffusion/v2-inference-v.yaml
+Applying attention optimization: Doggettx... done.
+Model loaded in 16.5s (load weights from disk: 13.3s, find config: 0.9s, apply weights to model: 1.7s, calculate empty prompt: 0.4s).
+  0%|                                                                                                                                                                                                                                                                                                                                                        | 0/20 [00:03<?, ?it/s]
+*** Error completing request
+*** Arguments: ('task(znbnpfl1d2pbwac)', <gradio.routes.Request object at 0x7f7af03f4f70>, 'a beauty from China', '', [], 1, 1, 7, 512, 512, False, 0.7, 2, 'Latent', 0, 0, 0, 'Use same checkpoint', 'Use same sampler', 'Use same scheduler', '', '', [], 0, 20, 'DPM++ 2M', 'Automatic', False, '', 0.8, -1, False, -1, 0, 0, 0, False, False, 'positive', 'comma', 0, False, False, 'start', '', 1, '', [], 0, '', [], 0, '', [], True, False, False, False, False, False, False, 0, False) {}
+    Traceback (most recent call last):
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 57, in f
+        res = list(func(*args, **kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 36, in f
+        res = func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/txt2img.py", line 109, in txt2img
+        processed = processing.process_images(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 845, in process_images
+        res = process_images_inner(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 981, in process_images_inner
+        samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 1328, in sample
+        samples = self.sampler.sample(self, x, conditioning, unconditional_conditioning, image_conditioning=self.txt2img_image_conditioning(x))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in sample
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_common.py", line 272, in launch_sampling
+        return func()
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in <lambda>
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+        return func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/repositories/k-diffusion/k_diffusion/sampling.py", line 594, in sample_dpmpp_2m
+        denoised = model(x, sigmas[i] * s_in, **extra_args)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+        return self._call_impl(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+        return forward_call(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_cfg_denoiser.py", line 269, in forward
+        devices.test_for_nans(x_out, "unet")
+      File "/mnt/git/stable-diffusion-webui/modules/devices.py", line 255, in test_for_nans
+        raise NansException(message)
+    modules.devices.NansException: A tensor with all NaNs was produced in Unet. This could be either because there's not enough precision to represent the picture, or because your video card does not support half type. Try setting the "Upcast cross attention layer to float32" option in Settings > Stable Diffusion or using the --no-half commandline argument to fix this. Use --disable-nan-check commandline argument to disable this check.
+
+---
+  0%|                                                                                                                                                                                                                                                                                                                                                        | 0/20 [00:00<?, ?it/s]
+*** Error completing request
+*** Arguments: ('task(qxo2a1kwjguvzz9)', <gradio.routes.Request object at 0x7f7af180a950>, 'a beauty from China', '', [], 1, 1, 7, 512, 512, False, 0.7, 2, 'Latent', 0, 0, 0, 'Use same checkpoint', 'Use same sampler', 'Use same scheduler', '', '', [], 0, 20, 'DPM++ 2M', 'Automatic', False, '', 0.8, -1, False, -1, 0, 0, 0, False, False, 'positive', 'comma', 0, False, False, 'start', '', 1, '', [], 0, '', [], 0, '', [], True, False, False, False, False, False, False, 0, False) {}
+    Traceback (most recent call last):
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 57, in f
+        res = list(func(*args, **kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 36, in f
+        res = func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/txt2img.py", line 109, in txt2img
+        processed = processing.process_images(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 845, in process_images
+        res = process_images_inner(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 981, in process_images_inner
+        samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 1328, in sample
+        samples = self.sampler.sample(self, x, conditioning, unconditional_conditioning, image_conditioning=self.txt2img_image_conditioning(x))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in sample
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_common.py", line 272, in launch_sampling
+        return func()
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in <lambda>
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+        return func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/repositories/k-diffusion/k_diffusion/sampling.py", line 594, in sample_dpmpp_2m
+        denoised = model(x, sigmas[i] * s_in, **extra_args)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+        return self._call_impl(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+        return forward_call(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_cfg_denoiser.py", line 269, in forward
+        devices.test_for_nans(x_out, "unet")
+      File "/mnt/git/stable-diffusion-webui/modules/devices.py", line 255, in test_for_nans
+        raise NansException(message)
+    modules.devices.NansException: A tensor with all NaNs was produced in Unet. This could be either because there's not enough precision to represent the picture, or because your video card does not support half type. Try setting the "Upcast cross attention layer to float32" option in Settings > Stable Diffusion or using the --no-half commandline argument to fix this. Use --disable-nan-check commandline argument to disable this check.
+
+---
+^CInterrupted with signal 2 in <frame at 0x55b84630e850, file '/usr/lib/python3.10/threading.py', line 324, code wait>
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ set COMMANDLINE_ARGS=--api --no-half-vae --disable-nan-check --xformers --opt-split-attention --medvram
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Launching Web UI with arguments: 
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+No module 'xformers'. Proceeding without it.
+Loading weights [ad2a33c361] from /mnt/git/stable-diffusion-webui/models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 7.0s (prepare environment: 1.4s, import torch: 2.5s, import gradio: 0.7s, setup paths: 0.6s, other imports: 0.3s, list SD models: 0.2s, load scripts: 0.2s, create ui: 0.3s, gradio launch: 0.7s).
+Creating model from config: /mnt/git/stable-diffusion-webui/repositories/stable-diffusion-stability-ai/configs/stable-diffusion/v2-inference-v.yaml
+Applying attention optimization: Doggettx... done.
+Model loaded in 6.0s (load weights from disk: 2.7s, find config: 1.0s, apply weights to model: 1.7s, load textual inversion embeddings: 0.1s, calculate empty prompt: 0.3s).
+  0%|                                                                                                                                                                                                                                                                                                                                                        | 0/20 [00:00<?, ?it/s]
+*** Error completing request
+*** Arguments: ('task(x0a57kd03qgucc3)', <gradio.routes.Request object at 0x7f4933c905b0>, 'a horse driving ', '', [], 1, 1, 7, 512, 512, False, 0.7, 2, 'Latent', 0, 0, 0, 'Use same checkpoint', 'Use same sampler', 'Use same scheduler', '', '', [], 0, 20, 'DPM++ 2M', 'Automatic', False, '', 0.8, -1, False, -1, 0, 0, 0, False, False, 'positive', 'comma', 0, False, False, 'start', '', 1, '', [], 0, '', [], 0, '', [], True, False, False, False, False, False, False, 0, False) {}
+    Traceback (most recent call last):
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 57, in f
+        res = list(func(*args, **kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 36, in f
+        res = func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/txt2img.py", line 109, in txt2img
+        processed = processing.process_images(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 845, in process_images
+        res = process_images_inner(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 981, in process_images_inner
+        samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 1328, in sample
+        samples = self.sampler.sample(self, x, conditioning, unconditional_conditioning, image_conditioning=self.txt2img_image_conditioning(x))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in sample
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_common.py", line 272, in launch_sampling
+        return func()
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in <lambda>
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+        return func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/repositories/k-diffusion/k_diffusion/sampling.py", line 594, in sample_dpmpp_2m
+        denoised = model(x, sigmas[i] * s_in, **extra_args)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+        return self._call_impl(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+        return forward_call(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_cfg_denoiser.py", line 269, in forward
+        devices.test_for_nans(x_out, "unet")
+      File "/mnt/git/stable-diffusion-webui/modules/devices.py", line 255, in test_for_nans
+        raise NansException(message)
+    modules.devices.NansException: A tensor with all NaNs was produced in Unet. This could be either because there's not enough precision to represent the picture, or because your video card does not support half type. Try setting the "Upcast cross attention layer to float32" option in Settings > Stable Diffusion or using the --no-half commandline argument to fix this. Use --disable-nan-check commandline argument to disable this check.
+
+---
+^CInterrupted with signal 2 in <frame at 0x562d05d22b50, file '/usr/lib/python3.10/threading.py', line 324, code wait>
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ set COMMANDLINE_ARGS=--api --no-half-vae --no-half --disable-nan-check --xformers --opt-split-attention --medvram
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ ./webui.sh 
+
+################################################################
+Install script for stable-diffusion + Web UI
+Tested on Debian 11 (Bullseye), Fedora 34+ and openSUSE Leap 15.4 or newer.
+################################################################
+
+################################################################
+Running on ai user
+################################################################
+
+################################################################
+Repo already cloned, using it as install directory
+################################################################
+
+################################################################
+Create and activate python venv
+################################################################
+
+################################################################
+Launching launch.py...
+################################################################
+glibc version is 2.35
+Check TCMalloc: libtcmalloc_minimal.so.4
+libtcmalloc_minimal.so.4 is linked with libc.so,execute LD_PRELOAD=/lib/x86_64-linux-gnu/libtcmalloc_minimal.so.4
+Python 3.10.12 (main, Nov 20 2023, 15:14:05) [GCC 11.4.0]
+Version: v1.9.4
+Commit hash: feee37d75f1b168768014e4634dcb156ee649c05
+Launching Web UI with arguments: 
+no module 'xformers'. Processing without...
+no module 'xformers'. Processing without...
+No module 'xformers'. Proceeding without it.
+Loading weights [ad2a33c361] from /mnt/git/stable-diffusion-webui/models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 6.7s (prepare environment: 1.4s, import torch: 2.5s, import gradio: 0.7s, setup paths: 0.6s, other imports: 0.3s, load scripts: 0.4s, create ui: 0.3s, gradio launch: 0.5s).
+Creating model from config: /mnt/git/stable-diffusion-webui/repositories/stable-diffusion-stability-ai/configs/stable-diffusion/v2-inference-v.yaml
+Applying attention optimization: Doggettx... done.
+Model loaded in 5.8s (load weights from disk: 2.6s, find config: 1.0s, apply weights to model: 1.7s, load textual inversion embeddings: 0.1s, calculate empty prompt: 0.3s).
+  0%|                                                                                                                                                                                                                                                                                                                                                        | 0/20 [00:00<?, ?it/s]
+*** Error completing request
+*** Arguments: ('task(xqayzniarbj8wst)', <gradio.routes.Request object at 0x7f19eb826770>, 'a man ', '', [], 1, 1, 7, 512, 512, False, 0.7, 2, 'Latent', 0, 0, 0, 'Use same checkpoint', 'Use same sampler', 'Use same scheduler', '', '', [], 0, 20, 'DPM++ 2M', 'Automatic', False, '', 0.8, -1, False, -1, 0, 0, 0, False, False, 'positive', 'comma', 0, False, False, 'start', '', 1, '', [], 0, '', [], 0, '', [], True, False, False, False, False, False, False, 0, False) {}
+    Traceback (most recent call last):
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 57, in f
+        res = list(func(*args, **kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/call_queue.py", line 36, in f
+        res = func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/txt2img.py", line 109, in txt2img
+        processed = processing.process_images(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 845, in process_images
+        res = process_images_inner(p)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 981, in process_images_inner
+        samples_ddim = p.sample(conditioning=p.c, unconditional_conditioning=p.uc, seeds=p.seeds, subseeds=p.subseeds, subseed_strength=p.subseed_strength, prompts=p.prompts)
+      File "/mnt/git/stable-diffusion-webui/modules/processing.py", line 1328, in sample
+        samples = self.sampler.sample(self, x, conditioning, unconditional_conditioning, image_conditioning=self.txt2img_image_conditioning(x))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in sample
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_common.py", line 272, in launch_sampling
+        return func()
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_kdiffusion.py", line 218, in <lambda>
+        samples = self.launch_sampling(steps, lambda: self.func(self.model_wrap_cfg, x, extra_args=self.sampler_extra_args, disable=False, callback=self.callback_state, **extra_params_kwargs))
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+        return func(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/repositories/k-diffusion/k_diffusion/sampling.py", line 594, in sample_dpmpp_2m
+        denoised = model(x, sigmas[i] * s_in, **extra_args)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+        return self._call_impl(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/venv/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+        return forward_call(*args, **kwargs)
+      File "/mnt/git/stable-diffusion-webui/modules/sd_samplers_cfg_denoiser.py", line 269, in forward
+        devices.test_for_nans(x_out, "unet")
+      File "/mnt/git/stable-diffusion-webui/modules/devices.py", line 255, in test_for_nans
+        raise NansException(message)
+    modules.devices.NansException: A tensor with all NaNs was produced in Unet. This could be either because there's not enough precision to represent the picture, or because your video card does not support half type. Try setting the "Upcast cross attention layer to float32" option in Settings > Stable Diffusion or using the --no-half commandline argument to fix this. Use --disable-nan-check commandline argument to disable this check.
+
+---
+Applying attention optimization: Doggettx... done.
+Loading weights [ad2a33c361] from /mnt/git/stable-diffusion-webui/models/Stable-diffusion/v2-1_768-ema-pruned.ckpt
+Applying attention optimization: Doggettx... done.
+Weights loaded in 3.0s (calculate hash: 0.4s, load weights from disk: 0.9s, find config: 0.9s, apply weights to model: 0.5s, move model to device: 0.2s).
+Restarting UI...
+Closing server running on port: 7860
+Running on local URL:  http://127.0.0.1:7860
+
+To create a public link, set `share=True` in `launch()`.
+Startup time: 0.7s (load scripts: 0.2s, create ui: 0.2s, gradio launch: 0.3s).
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 20/20 [00:02<00:00,  8.36it/s]
+Total progress: 100%|███████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 20/20 [00:10<00:00,  2.00it/s]
+^CInterrupted with signal 2 in <frame at 0x55a755a80510, file '/usr/lib/python3.10/threading.py', line 324, code wait>██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 20/20 [00:10<00:00,  8.93it/s]
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ cd ..
+ai@ubt2204s-uefi-amd-diag:/mnt/git$ du -sh stable-diffusion-webui/
+41G	stable-diffusion-webui/
+ai@ubt2204s-uefi-amd-diag:/mnt/git$ cd -
+/mnt/git/stable-diffusion-webui
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui$ cd models/Stable-diffusion/
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui/models/Stable-diffusion$ ls
+ gitattributes   model_index.json  'Put Stable Diffusion checkpoints here.txt'   README.md   tokenizer   unet   v2-1_768-ema-pruned.ckpt   v2-1_768-ema-pruned.safetensors   v2-1_768-nonema-pruned.ckpt   v2-1_768-nonema-pruned.safetensors   vae
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui/models/Stable-diffusion$ rm unet -r
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui/models/Stable-diffusion$ rm vae -r
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui/models/Stable-diffusion$ cd ..
+ai@ubt2204s-uefi-amd-diag:/mnt/git/stable-diffusion-webui/models$ cd ../..
+ai@ubt2204s-uefi-amd-diag:/mnt/git$ du -sh stable-diffusion-webui/
+34G	stable-diffusion-webui/
+
